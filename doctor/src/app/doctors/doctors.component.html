@@ -1,0 +1,429 @@
+
+
+<div class="main-panel">
+    <app-header></app-header>
+    <div class="content">
+    <div class="container-fluid">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header card-header-primary">
+                    <h4 class="card-title ">Doctors                
+                        <div class="pull-right btn btn-warning" data-toggle="modal" role="dialog" data-target="#exampleModal" data-backdrop="static" date-keyboard="false" data-focus="true" #tref><i class="fa fa-plus" aria-hidden="true"></i> ADD</div>
+                    </h4>
+                    <p class="card-category"> Here is a subtitle for this table</p>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                      <div class="input-group">
+                        <span class="input-group-btn">
+                          <a class="btn btn-secondary" type="button" aria-label=""><i class="fa fa-search-plus" aria-hidden="true"></i></a>
+                        </span>
+                        <input type="search" class="form-control" name="name" id="name" placeholder="Search..." aria-label="" [(ngModel)]="term">
+                      </div>
+
+                      
+                        <table class="table">
+                            <thead class=" text-primary">
+                                <th>
+                                   Doctor ID
+                                </th>
+                                <th (click)="orderBy('name')">
+                                    Full Name
+                                    <i *ngIf="order == 'name'"class="fa fa-caret-square-o-down" aria-hidden="true"></i>
+                                    <!-- <i class="fa fa-caret-square-o-down" aria-hidden="true"></i> -->
+                                </th>
+                                <th (click)="orderBy('joinDate')">
+                                    Joining Date
+                                    <i *ngIf="order == 'joinDate'"class="fa fa-caret-square-o-down" aria-hidden="true"></i>
+
+                                </th>
+                                <th (click)="orderBy('specialization')">
+                                    Specialization
+                                    <i *ngIf="order == 'specialization'"class="fa fa-caret-square-o-down" aria-hidden="true"></i>
+
+                                </th>
+                                <th (click)="orderBy('qualification')">
+                                    Qualification
+                                    <i *ngIf="order == 'qualification'"class="fa fa-caret-square-o-down" aria-hidden="true"></i>
+
+                                </th>
+                                <th (click)="orderBy('experience')">
+                                   Experience
+                                   <i *ngIf="order == 'experience'"class="fa fa-caret-square-o-down" aria-hidden="true"></i>
+
+                                </th>
+                                <th (click)="orderBy('tehseel')">
+                                    Location
+                                    <i *ngIf="order == 'tehseel'"class="fa fa-caret-square-o-down" aria-hidden="true"></i>
+
+                                </th>
+                                <th (click)="orderBy('status')">
+                                    status
+                                    <i *ngIf="order == 'status'"class="fa fa-caret-square-o-down" aria-hidden="true"></i>
+
+                                </th>
+                                <th>
+                                    Note
+                                </th>
+                                 <th>
+                                    Actions
+                                </th>
+
+                            </thead>
+                            <tbody *ngIf="doctors">
+                                <tr *ngFor="let x of doctors | filter:term | orderBy: order" >
+                                    <td>
+                                      {{x?.id}}
+                                    </td>
+                                    <td>
+                                      {{x?.name}}
+                                    </td>
+                                    <td>
+                                        {{x?.joinDate}}
+                                    </td>
+                                    <td>
+                                        {{x?.specialization}}
+                                    </td>
+                                    <td>
+                                       {{x?.qualification}}
+                                    </td>
+                                    <td>
+                                        {{x?.experience}}
+                                     </td>
+                                    <td>
+                                        {{x?.tehseel}}, {{x?.city}}, {{x?.country}} .
+                                     </td>
+                                     <td>
+                                       
+                                         <span *ngIf="x.status == 'active'" class="badge badge-primary">{{x?.status}}</span> 
+                                         <span *ngIf="x.status == 'away'" class="badge badge-warning">{{x?.status}}</span> 
+                                         <span *ngIf="x.status == 'dismiss'" class="badge badge-danger"> {{x?.status}}</span>
+                                        </td>
+                                     <td>
+                                        {{x?.note}}
+                                     </td>
+                                     <td>
+                                        <span class="btn btn-sm btn-danger" (click)="selectedDoctor = x" data-toggle="modal" data-target="#deleteModal" > <i class="fa fa-remove" aria-hidden="true"></i></span> 
+                                        <span class="btn btn-sm btn-success" (click)="selectedDoctor = x" data-toggle="modal" data-target="#editModal" > <i class="fa fa-edit" aria-hidden="true"></i></span> 
+                                      </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+  </div>
+
+
+
+<!-- Modal DELETE -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModal" aria-hidden="true">
+  <div class="modal-dialog modal-sm|lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title" id="deleteModal">Confirm Delete</h4>
+      </div>
+      <div class="modal-body" *ngIf="selectedDoctor">
+       Are you sure you want to delete <span class="text-danger"> {{selectedDoctor?.name}}</span> Vaccine?       
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+        <button type="button" class="btn btn-danger" (click)="delete(selectedDoctor)">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+  <!-- Modal INSERT-->
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Add Doctor</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="container">
+            <form #doctorForm="ngForm" (submit)="submit(doctorForm.value)">
+                <div class="row">
+          <div class="col-md-12 form-group">
+            <label for=""></label>
+            <input type="text"
+              class="form-control" name="name" placeholder="Full Name" ngModel>
+          </div>
+          <div class="col-md-6 form-group">
+            <label for=""></label>
+            <input type="number"
+              class="form-control" name="phone"  aria-describedby="helpId" placeholder="Phone Number" ngModel>
+          </div>
+          <div class="col-md-6 form-group">
+              <label for=""></label>
+              <input type="email"
+                class="form-control" name="email" aria-describedby="helpId" placeholder="Email" ngModel>
+            </div>
+            <div class="col-md-12 form-group">
+                <label for=""></label>
+                <input type="password"
+                  class="form-control" name="password" aria-describedby="helpId" placeholder="Password" ngModel>
+              </div>
+          <div class="col-md-6 form-group">
+              <label for=""></label>
+              <input type="text"
+                class="form-control" name="qualification" aria-describedby="helpId" placeholder="Latest Qualification" ngModel>
+            </div>
+            <div class="col-md-6 form-group">
+                <label for=""></label>
+                <input type="number"
+                  class="form-control" name="experience"  aria-describedby="helpId" placeholder="Experience(Years)" ngModel>
+              </div>
+          <div class="col-md-12 form-group">
+              <label for=""></label>
+              <input type="text"
+                class="form-control" name="specialization"  aria-describedby="helpId" placeholder="Specialization" ngModel>
+            </div>
+            <div class="col-md-4 form-group">
+                <label for="">Tehseel</label>
+                <input type="text"
+                  class="form-control" name="tehseel" aria-describedby="helpId" ngModel>
+              </div>
+              <div class="col-md-4 form-group">
+                  <label for="">City</label>
+                  <input type="text"
+                    class="form-control" name="city"  aria-describedby="helpId" ngModel>
+                </div>
+                <div class="col-md-4 form-group">
+                    <label for="">Country</label>
+                    <input type="text"
+                      class="form-control" name="country" aria-describedby="helpId" ngModel>
+                  </div>
+                  <div class="col-md-6 form-group">
+                    <div class="form-check">
+                        <label class="form-check-label">
+                                Approvde account!
+                            <input class="form-check-input" type="checkbox" value="" name="approved" ngModel>
+                            <span class="form-check-sign">
+                                <span class="check"></span>
+                            </span>
+                        </label>
+                    </div>
+                  </div>
+                  <div class="col-md-6 form-group">
+                          <label for="">Status</label>
+                          <select class="form-control" name="status" ngModel>
+                            <option value="active">Active</option>
+                            <option value="dismiss">Dismiss</option>
+                            <option value="away">Away</option>
+                          </select>
+                      </div>
+                  <div class="col-md-12 form-group">
+                      <label for="">Note</label>
+                      <textarea class="form-control" name="note"  rows="3" placeholder="Prescription Note.." ngModel></textarea>
+                    </div>
+          
+        
+                </div>
+        </form>
+        
+        </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" (click)="submit(doctorForm.value)" >Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <!-- MODAL EDIT -->
+    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModal" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Update Doctor</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="container" *ngIf="selectedDoctor">
+                <form #doctorUpdateForm="ngForm" (submit)="submit(doctorUpdateForm.value)">
+                    <div class="row">
+              <div class="col-md-12 form-group">
+                <label for=""></label>
+                <input type="text"
+                  class="form-control" name="name" placeholder="Full Name" [(ngModel)]="selectedDoctor.name">
+              </div>
+              <div class="col-md-6 form-group">
+                <label for=""></label>
+                <input type="number"
+                  class="form-control" name="phone"  aria-describedby="helpId" placeholder="Phone Number" [(ngModel)]="selectedDoctor.phone">
+              </div>
+              <div class="col-md-6 form-group">
+                  <label for=""></label>
+                  <input type="email"
+                    class="form-control" name="email" aria-describedby="helpId" placeholder="Email" [(ngModel)]="selectedDoctor.email">
+                </div>
+                <div class="col-md-12 form-group">
+                    <label for=""></label>
+                    <input type="password"
+                      class="form-control" name="password" aria-describedby="helpId" placeholder="Password" [(ngModel)]="selectedDoctor.password">
+                  </div>
+              <div class="col-md-6 form-group">
+                  <label for=""></label>
+                  <input type="text"
+                    class="form-control" name="qualification" aria-describedby="helpId" placeholder="Latest Qualification" [(ngModel)]="selectedDoctor.qualification">
+                </div>
+                <div class="col-md-6 form-group">
+                    <label for=""></label>
+                    <input type="number"
+                      class="form-control" name="experience"  aria-describedby="helpId" placeholder="Experience(Years)" [(ngModel)]="selectedDoctor.experience">
+                  </div>
+              <div class="col-md-12 form-group">
+                  <label for=""></label>
+                  <input type="text"
+                    class="form-control" name="specialization"  aria-describedby="helpId" placeholder="Specialization" [(ngModel)]="selectedDoctor.specialization">
+                </div>
+                <div class="col-md-4 form-group">
+                    <label for="">Tehseel</label>
+                    <input type="text"
+                      class="form-control" name="tehseel" aria-describedby="helpId" [(ngModel)]="selectedDoctor.tehseel">
+                  </div>
+                  <div class="col-md-4 form-group">
+                      <label for="">City</label>
+                      <input type="text"
+                        class="form-control" name="city"  aria-describedby="helpId" [(ngModel)]="selectedDoctor.city">
+                    </div>
+                    <div class="col-md-4 form-group">
+                        <label for="">Country</label>
+                        <input type="text"
+                          class="form-control" name="country" aria-describedby="helpId" [(ngModel)]="selectedDoctor.country">
+                      </div>
+                      <div class="col-md-6 form-group">
+                        <div class="form-check">
+                            <label class="form-check-label">
+                                    Approvde account!
+                                <input class="form-check-input" type="checkbox" name="approved" [(ngModel)]="selectedDoctor.approved">
+                                <span class="form-check-sign">
+                                    <span class="check"></span>
+                                </span>
+                            </label>
+                        </div>
+                      </div>
+                      <div class="col-md-6 form-group">
+                              <label for="">Status</label>
+                              <select class="form-control" name="status" [(ngModel)]="selectedDoctor.status">
+                                <option value="active">Active</option>
+                                <option value="dismiss">Dismiss</option>
+                                <option value="away">Away</option>
+                              </select>
+                          </div>
+                      <div class="col-md-12 form-group">
+                          <label for="">Note</label>
+                          <textarea class="form-control" name="note"  rows="3" placeholder="Prescription Note.." [(ngModel)]="selectedDoctor.note"></textarea>
+                        </div>
+              
+            
+                    </div>
+            </form>
+            
+            </div>
+            </div>
+            <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" (click)="update(selectedDoctor)" >Save changes</button>
+                  </div>
+          </div>
+        </div>
+      </div>
+
+
+
+    <!-- Modal EDIT -->
+    <!-- <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModal" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="editModal">Edit Vacination</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body" *ngIf="selectedDoctor">
+              <div class="container">
+                <form #vaccineUpdateForm="ngForm" (submit)="update(selectedDoctor)">
+                    <div class="row">
+              <div class="col-md-12 form-group">
+                <label for=""></label>
+                <input type="text"
+                  class="form-control" name="name" id="" aria-describedby="helpId" placeholder="Vaccination Name" [(ngModel)]="selectedDoctor.name">
+              </div>
+              <div class="col-md-6 form-group">
+                  <label for=""></label>
+                  <input type="number"
+                    class="form-control" name="dosage" id="" aria-describedby="helpId" placeholder="Dosage"  [(ngModel)]="selectedDoctor.dosage">
+                </div>
+                <div class="col-md-6 form-group">
+                    <label for=""></label>
+                    <input type="number"
+                      class="form-control" name="quantity" id="" aria-describedby="helpId" placeholder="Quantity"  [(ngModel)]="selectedDoctor.quantity">
+                  </div>
+              <div class="col-md-12 form-group">
+                  <label for=""></label>
+                  <input type="text"
+                    class="form-control" name="disease" id="" aria-describedby="helpId" placeholder="Disease name"  [(ngModel)]="selectedDoctor.disease">
+                </div>
+                <div class="col-md-12 form-group">
+                    <label for=""></label>
+                    <input type="text"
+                      class="form-control" name="company" id="" aria-describedby="helpId" placeholder="Company Name"  [(ngModel)]="selectedDoctor.company">
+                  </div>
+                <div class="col-md-6 form-group">
+                    <label for="">Manufacture Date</label>
+                    <input type="date"
+                      class="form-control" name="mfg" id="" aria-describedby="helpId"  [(ngModel)]="selectedDoctor.mfg">
+                  </div>
+                  <div class="col-md-6 form-group">
+                      <label for="">Expiry Date</label>
+                      <input type="date"
+                        class="form-control" name="exp" id="" aria-describedby="helpId"  [(ngModel)]="selectedDoctor.exp">
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label for="">Minimum Age</label>
+                        <input type="number"
+                          class="form-control" name="minAge" id="" aria-describedby="helpId"  [(ngModel)]="selectedDoctor.minAge">
+                      </div>
+                      <div class="col-md-6 form-group">
+                          <label for="">Maximum Age</label>
+                          <input type="number"
+                            class="form-control" name="maxAge" id="" aria-describedby="helpId"  [(ngModel)]="selectedDoctor.maxAge">
+                        </div>
+                        <div class="col-md-12 form-group">
+                          <label for="">Note</label>
+                          <textarea class="form-control" name="note" id="" rows="3" placeholder="Prescription Note.."  [(ngModel)]="selectedDoctor.note"></textarea>
+                        </div>
+              
+            
+                    </div>
+            </form>
+            
+            </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary" (click)="update(selectedDoctor)" >Save changes</button>
+            </div>
+          </div>
+        </div>
+      </div> -->

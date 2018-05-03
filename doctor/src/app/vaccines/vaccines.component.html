@@ -1,0 +1,311 @@
+
+
+<div class="main-panel">
+    <app-header></app-header>
+    <div class="content">
+    <div class="container-fluid">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header card-header-primary">
+                    <h4 class="card-title ">Vaccines                
+                        <div class="pull-right btn btn-warning" data-toggle="modal" role="dialog" data-target="#exampleModal" data-backdrop="static" date-keyboard="false" data-focus="true" #tref><i class="fa fa-plus" aria-hidden="true"></i> ADD</div>
+                    </h4>
+                    <p class="card-category"> Here is a subtitle for this table</p>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                      <div class="input-group">
+                        <span class="input-group-btn">
+                          <a class="btn btn-secondary" type="button" aria-label=""><i class="fa fa-search-plus" aria-hidden="true"></i></a>
+                        </span>
+                        <input type="search" class="form-control" name="name" id="name" placeholder="Search..." aria-label="" [(ngModel)]="term">
+                      </div>
+
+                      
+                        <table class="table">
+                            <thead class=" text-primary">
+                                <th>
+                                   Vaccine ID
+                                </th>
+                                <th (click)="orderBy('name')">
+                                    Brand Name
+                                    <i *ngIf="order == 'name'"class="fa fa-caret-square-o-down" aria-hidden="true"></i>
+                                    <!-- <i class="fa fa-caret-square-o-down" aria-hidden="true"></i> -->
+                                </th>
+                                <th (click)="orderBy('mfg')">
+                                    Mfg Date
+                                    <i *ngIf="order == 'mfg'"class="fa fa-caret-square-o-down" aria-hidden="true"></i>
+
+                                </th>
+                                <th (click)="orderBy('exp')">
+                                    Exp Date
+                                    <i *ngIf="order == 'exp'"class="fa fa-caret-square-o-down" aria-hidden="true"></i>
+
+                                </th>
+                                <th (click)="orderBy('dosage')">
+                                    Dosage
+                                    <i *ngIf="order == 'dosage'"class="fa fa-caret-square-o-down" aria-hidden="true"></i>
+
+                                </th>
+                                <th (click)="orderBy('quantity')">
+                                    Qty
+                                    <i *ngIf="order == 'quantity'"class="fa fa-caret-square-o-down" aria-hidden="true"></i>
+
+                                </th>
+                                <th (click)="orderBy('minAge')">
+                                   Age Group
+                                   <i *ngIf="order == 'minAge'"class="fa fa-caret-square-o-down" aria-hidden="true"></i>
+
+                                </th>
+                                <th (click)="orderBy('disease')">
+                                    Disease
+                                    <i *ngIf="order == 'disease'"class="fa fa-caret-square-o-down" aria-hidden="true"></i>
+
+                                </th>
+                                <th (click)="orderBy('company')">
+                                    Company
+                                    <i *ngIf="order == 'company'"class="fa fa-caret-square-o-down" aria-hidden="true"></i>
+
+                                </th>
+                                <th>
+                                    Note
+                                </th>
+                                 <th>
+                                    Actions
+                                </th>
+
+                            </thead>
+                            <tbody *ngIf="vaccines">
+                                <tr *ngFor="let x of vaccines | filter:term | orderBy: order" >
+                                    <td>
+                                      {{x?.id}}
+                                    </td>
+                                    <td>
+                                      {{x?.name}}
+                                    </td>
+                                    <td>
+                                        {{x?.mfg}}
+                                    </td>
+                                    <td>
+                                        {{x?.exp}}
+                                    </td>
+                                    <td>
+                                       {{x?.dosage}}
+                                    </td>
+                                    <td>
+                                        {{x?.quantity}}
+                                     </td>
+                                    <td>
+                                        {{x?.minAge}} - {{x?.maxAge}}
+                                     </td>
+                                     <td>
+                                        {{x?.disease}}
+                                     </td>
+                                     <td>
+                                        {{x?.company}}
+                                     </td>
+                                     <td>
+                                        {{x?.note}}
+                                     </td>
+                                     <td>
+
+
+                                        <span class="btn btn-sm btn-danger" (click)="selectedVaccine = x" data-toggle="modal" data-target="#deleteModal" > <i class="fa fa-remove" aria-hidden="true"></i></span> 
+                                        <span class="btn btn-sm btn-success" (click)="selectedVaccine = x" data-toggle="modal" data-target="#editModal" > <i class="fa fa-edit" aria-hidden="true"></i></span> 
+                                      </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+  </div>
+
+
+
+<!-- Modal DELETE -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModal" aria-hidden="true">
+  <div class="modal-dialog modal-sm|lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title" id="deleteModal">Confirm Delete</h4>
+      </div>
+      <div class="modal-body" *ngIf="selectedVaccine">
+       Are you sure you want to delete <span class="text-danger"> {{selectedVaccine?.name}}</span> Vaccine?       
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+        <button type="button" class="btn btn-danger" (click)="delete(selectedVaccine)">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Add Vacination</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="container">
+            <form #vaccineForm="ngForm" (submit)="submit(vaccineForm.value)">
+                <div class="row">
+          <div class="col-md-12 form-group">
+            <label for=""></label>
+            <input type="text"
+              class="form-control" name="name" id="" aria-describedby="helpId" placeholder="Vaccination Name" ngModel>
+          </div>
+          <div class="col-md-6 form-group">
+              <label for=""></label>
+              <input type="number"
+                class="form-control" name="dosage" id="" aria-describedby="helpId" placeholder="Dosage" ngModel>
+            </div>
+            <div class="col-md-6 form-group">
+                <label for=""></label>
+                <input type="number"
+                  class="form-control" name="quantity" id="" aria-describedby="helpId" placeholder="Quantity" ngModel>
+              </div>
+          <div class="col-md-12 form-group">
+              <label for=""></label>
+              <input type="text"
+                class="form-control" name="disease" id="" aria-describedby="helpId" placeholder="Disease name" ngModel>
+            </div>
+            <div class="col-md-12 form-group">
+                <label for=""></label>
+                <input type="text"
+                  class="form-control" name="company" id="" aria-describedby="helpId" placeholder="Company Name" ngModel>
+              </div>
+            <div class="col-md-6 form-group">
+                <label for="">Manufacture Date</label>
+                <input type="date"
+                  class="form-control" name="mfg" id="" aria-describedby="helpId" ngModel>
+              </div>
+              <div class="col-md-6 form-group">
+                  <label for="">Expiry Date</label>
+                  <input type="date"
+                    class="form-control" name="exp" id="" aria-describedby="helpId" ngModel>
+                </div>
+                <div class="col-md-6 form-group">
+                    <label for="">Minimum Age</label>
+                    <input type="number"
+                      class="form-control" name="minAge" id="" aria-describedby="helpId" ngModel>
+                  </div>
+                  <div class="col-md-6 form-group">
+                      <label for="">Maximum Age</label>
+                      <input type="number"
+                        class="form-control" name="maxAge" id="" aria-describedby="helpId" ngModel>
+                    </div>
+                    <div class="col-md-12 form-group">
+                      <label for="">Note</label>
+                      <textarea class="form-control" name="note" id="" rows="3" placeholder="Prescription Note.." ngModel></textarea>
+                    </div>
+          
+        
+                </div>
+        </form>
+        
+        </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" (click)="submit(vaccineForm.value)" >Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+
+
+    <!-- Modal EDIT -->
+    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModal" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="editModal">Edit Vacination</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body" *ngIf="selectedVaccine">
+              <div class="container">
+                <form #vaccineUpdateForm="ngForm" (submit)="update(selectedVaccine)">
+                    <div class="row">
+              <div class="col-md-12 form-group">
+                <label for=""></label>
+                <input type="text"
+                  class="form-control" name="name" id="" aria-describedby="helpId" placeholder="Vaccination Name" [(ngModel)]="selectedVaccine.name">
+              </div>
+              <div class="col-md-6 form-group">
+                  <label for=""></label>
+                  <input type="number"
+                    class="form-control" name="dosage" id="" aria-describedby="helpId" placeholder="Dosage"  [(ngModel)]="selectedVaccine.dosage">
+                </div>
+                <div class="col-md-6 form-group">
+                    <label for=""></label>
+                    <input type="number"
+                      class="form-control" name="quantity" id="" aria-describedby="helpId" placeholder="Quantity"  [(ngModel)]="selectedVaccine.quantity">
+                  </div>
+              <div class="col-md-12 form-group">
+                  <label for=""></label>
+                  <input type="text"
+                    class="form-control" name="disease" id="" aria-describedby="helpId" placeholder="Disease name"  [(ngModel)]="selectedVaccine.disease">
+                </div>
+                <div class="col-md-12 form-group">
+                    <label for=""></label>
+                    <input type="text"
+                      class="form-control" name="company" id="" aria-describedby="helpId" placeholder="Company Name"  [(ngModel)]="selectedVaccine.company">
+                  </div>
+                <div class="col-md-6 form-group">
+                    <label for="">Manufacture Date</label>
+                    <input type="date"
+                      class="form-control" name="mfg" id="" aria-describedby="helpId"  [(ngModel)]="selectedVaccine.mfg">
+                  </div>
+                  <div class="col-md-6 form-group">
+                      <label for="">Expiry Date</label>
+                      <input type="date"
+                        class="form-control" name="exp" id="" aria-describedby="helpId"  [(ngModel)]="selectedVaccine.exp">
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label for="">Minimum Age</label>
+                        <input type="number"
+                          class="form-control" name="minAge" id="" aria-describedby="helpId"  [(ngModel)]="selectedVaccine.minAge">
+                      </div>
+                      <div class="col-md-6 form-group">
+                          <label for="">Maximum Age</label>
+                          <input type="number"
+                            class="form-control" name="maxAge" id="" aria-describedby="helpId"  [(ngModel)]="selectedVaccine.maxAge">
+                        </div>
+                        <div class="col-md-12 form-group">
+                          <label for="">Note</label>
+                          <textarea class="form-control" name="note" id="" rows="3" placeholder="Prescription Note.."  [(ngModel)]="selectedVaccine.note"></textarea>
+                        </div>
+              
+            
+                    </div>
+            </form>
+            
+            </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary" (click)="update(selectedVaccine)" >Save changes</button>
+            </div>
+          </div>
+        </div>
+      </div>

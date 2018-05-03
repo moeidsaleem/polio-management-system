@@ -1,0 +1,508 @@
+
+
+<div class="main-panel">
+        <app-header></app-header>
+        <div class="content">
+        <div class="container-fluid">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header card-header-primary">
+                        <h4 class="card-title ">Guardians registerd by: <b *ngIf="workerName">{{workerName}}</b>              
+                
+                        </h4>
+                        <p class="card-category"> Here is a subtitle for this table.</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                          <div class="input-group">
+                            <span class="input-group-btn">
+                              <a class="btn btn-secondary" type="button" aria-label=""><i class="fa fa-search-plus" aria-hidden="true"></i></a>
+                            </span>
+                            <input type="search" class="form-control" name="name" id="name" placeholder="Search..." aria-label="" [(ngModel)]="term">
+                          </div>
+    
+                          
+                            <table class="table">
+                                <thead class=" text-primary">
+                                    <th>
+                                       Guardian ID
+                                    </th>
+                                    <th (click)="orderBy('name')">
+                                        Full Name
+                                        <i *ngIf="order == 'name'"class="fa fa-caret-square-o-down" aria-hidden="true"></i>
+                                        <!-- <i class="fa fa-caret-square-o-down" aria-hidden="true"></i> -->
+                                    </th>
+                                    <th (click)="orderBy('joinDate')">
+                                        Joining Date
+                                        <i *ngIf="order == 'joinDate'"class="fa fa-caret-square-o-down" aria-hidden="true"></i>
+    
+                                    </th>
+                                    <th (click)="orderBy('cnic')">
+                                        cnic
+                                        <i *ngIf="order == 'cnic'"class="fa fa-caret-square-o-down" aria-hidden="true"></i>
+    
+                                    </th>
+                                    <th (click)="orderBy('tehseel')">
+                                        Location
+                                        <i *ngIf="order == 'tehseel'"class="fa fa-caret-square-o-down" aria-hidden="true"></i>
+    
+                                    </th>
+                                    <th (click)="orderBy('workerName')">
+                                        Assigned Worker
+                                        <i *ngIf="order == 'workerName'"class="fa fa-caret-square-o-down" aria-hidden="true"></i>
+                                    </th>
+                                    <th>Children</th>
+                                    <th (click)="orderBy('status')">
+                                        status
+                                        <i *ngIf="order == 'status'"class="fa fa-caret-square-o-down" aria-hidden="true"></i>
+    
+                                    </th>
+                                    <th>
+                                        Note
+                                    </th>
+                                     <th>
+                                        Actions
+                                    </th>
+    
+                                </thead>
+                                <tbody *ngIf="guardians">
+                                    <tr *ngFor="let x of guardians | filter:term | orderBy: order" >
+                                        <td>
+                                          {{x?.id}}
+                                        </td>
+                                        <td>
+                                          {{x?.name}}
+                                        </td>
+                                        <td>
+                                            {{x?.joinDate}}
+                                        </td>
+                                        <td>
+                                            {{x?.cnic}}
+                                        </td>
+                                        <td>
+                                            {{x?.tehseel}}, {{x?.city}}, {{x?.country}} .
+                                         </td>
+                                         <td>
+                                          <strong> {{x?.workerName}}   
+                                        </strong> 
+                                        </td>
+                                        <td>
+                                            <span class="badge badge-info"  data-toggle="modal"
+                                            data-target="#childrenModal" (click)="selectedGuardian = x;loadChildren(x.id)"> 
+                                                <h6 >
+                                                    <i class="material-icons" >child_care</i><br>{{x?.totalChildren}} 
+                                                </h6>                                                                      
+                                            </span>
+                                       </td>
+                                         <td>
+                                             <span *ngIf="x.status == 'active'" class="badge badge-primary">{{x?.status}}</span> 
+                                             <span *ngIf="x.status == 'away'" class="badge badge-warning">{{x?.status}}</span> 
+                                             <span *ngIf="x.status == 'dismiss'" class="badge badge-danger"> {{x?.status}}</span>
+                                            </td>
+                                         <td>
+                                            {{x?.note}}
+                                         </td>
+                                         <td>
+
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+      </div>
+    
+    
+
+
+
+      <!--  ::::::::::::::::::::::::::::::::::::::::::::::::::: MODALs  ::::::::::::::::::::::::::::::::::::::::::::: -->
+      <!-- Modal Children -->
+      <div class="modal fade" id="childrenModal" tabindex="-1" role="dialog" aria-labelledby="childrenModal" aria-hidden="true">
+            <div class="modal-dialog modal-sm|lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header" *ngIf="selectedGuardian">
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                  <h4 class="modal-title" id="childrenModal">Manage {{selectedGuardian?.name}} Children</h4>
+                </div>
+                <div class="modal-body" >
+                    <div class="container">
+                        <div class="row text-center">
+                            <div class="col-md-12 text-center">
+                            <!-- <h3 class="text-center" *ngIf="childAddToggle==true">
+                                <span class="badge badge-success" (click)="childAddToggle = !childAddToggle"><i class="fa fa-plus">ADD</i></span>
+                        </h3> -->
+                        <form #childForm="ngForm" (submit)="addChild(childForm.value)"  *ngIf="childAddToggle==false">  
+                            <div class="col-md-12 form-group">
+                              <label for="">Full Name</label>
+                              <input type="text"
+                                class="form-control" name="name" id="" aria-describedby="helpId" placeholder="" ngModel>
+                            </div>
+                            <div class="row">
+                            <div class="col-md-6 form-group">
+                                    <label for="">Age</label>
+                                    <input type="number"
+                                      class="form-control" name="age" id="" aria-describedby="helpId" placeholder="" ngModel>
+                                      </div>
+                                  <div class="col-md-6 form-group">
+                                        <label for="">Last Vaccination</label>
+                                        <input type="date"
+                                          class="form-control" name="lastVacc" id="" aria-describedby="helpId" placeholder="" ngModel>
+                                      </div>
+                                    </div>
+                                      <div class="form-group">
+                                            <label for="">Allergies</label>
+                                            <input type="allergies"
+                                              class="form-control" name="allergies" id="" aria-describedby="helpId" placeholder="" ngModel>
+                                          </div>
+                                          <button class="btn btn-danger" (click)="childAddToggle= !childAddToggle"><i class="fa fa-remove"></i></button>
+                                          <button type="submit" class="btn btn-primary">Submit</button>
+                        </form>
+                    </div>
+
+                    <div class="col-md-12">
+                        <table class="table">
+                            <thead>
+                                <tr  class="text-center">
+                                    <th>CHILDREN</th>
+                                   
+                                </tr>
+                                <tr style="font:bold;">
+                                        <th >Full Name</th>
+                                        <th >Age</th>
+                                        <th >Latest Vacc.</th>
+                                        <th >allergies</th>
+                                        <td></td>
+                                       
+                                    </tr>
+                            </thead>
+                            <tbody *ngIf="children">
+                                <tr class="small" *ngFor="let child of children">
+                                    <td scope="row">{{child?.name}}</td>
+                                    <td>{{child?.age}}</td>
+                                    <td><b>{{child?.lastVacc}}</b></td>
+                                    <td> {{child?.allergies}}</td>
+                                    <td>
+                                            <span class="btn btn-sm btn-danger" (click)="deleteChild(child.id)"> <i class="fa fa-remove" aria-hidden="true"></i></span> 
+                                            <span class="btn btn-sm btn-success" (click)="selectedChild = child" data-toggle="modal" data-target="#updateChildModal" > <i class="fa fa-edit" aria-hidden="true"></i></span> 
+                                          </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                            
+
+                        </div>
+                    </div>
+
+                 
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  <!-- <button type="button" class="btn btn-danger" (click)="delete(selectedGuardian)">Delete</button> -->
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+
+    <!-- Modal DELETE -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModal" aria-hidden="true">
+      <div class="modal-dialog modal-sm|lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title" id="deleteModal">Confirm Delete</h4>
+          </div>
+          <div class="modal-body" *ngIf="selectedGuardian">
+           Are you sure you want to delete <span class="text-danger"> {{selectedGuardian?.name}}</span> Vaccine?       
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+            <button type="button" class="btn btn-danger" (click)="delete(selectedGuardian)">Delete</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+        <!-- Modal Update Assigned Doctor -->
+        <div class="modal fade" id="updateDoctorModal" tabindex="-1" role="dialog" aria-labelledby="deleteModal" aria-hidden="true">
+                <div class="modal-dialog modal-sm|lg" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                      <h4 class="modal-title" id="updateDoctorModal">Change Assigned Worker</h4>
+                    </div>
+                    <div class="modal-body" *ngIf="selectedGuardian">
+                            <div class="col-md-12 form-group" *ngIf="workers">
+                                    <label for="">Assigned Worker</label>
+                                    <select class="form-control" (change)="onChange($event.target.value)">
+                                        <option value=""></option>
+                                      <option *ngFor="let doc of workers" value='{ "id":"{{doc.id}}", "name":"{{doc.name}}" }' >{{doc.name}}</option>
+                                    </select>
+                                    </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                      <button type="button" class="btn btn-warning" (click)="updateWorker(selectedGuardian)">Update</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+    
+
+                <!-- Modal Update Selected Children -->
+        <div class="modal fade" id="updateChildModal" tabindex="-1" role="dialog" aria-labelledby="updateChildModal" aria-hidden="true">
+                <div class="modal-dialog modal-sm|lg" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                      <h4 class="modal-title" id="deleteModal">Update {{selectedChild?.name}}'s Data</h4>
+                    </div>
+                    <div class="modal-body" *ngIf="selectedChild">
+                        <div class="form-group">
+                          <label for=""></label>
+                          <input type="text"
+                            class="form-control" name="" id="" aria-describedby="helpId" placeholder="name" [(ngModel)]="selectedChild.name">
+                          <small id="helpId" class="form-text text-muted">Help text</small>
+                        </div>
+                        <div class="form-group">
+                                <label for=""></label>
+                                <input type="number"
+                                  class="form-control" name="" id="" aria-describedby="helpId" placeholder="age" [(ngModel)]="selectedChild.age">
+                                <small id="helpId" class="form-text text-muted">Help text</small>
+                              </div>
+                              <div class="form-group">
+                                    <label for=""></label>
+                                    <input type="date"
+                                      class="form-control" name="" id="" aria-describedby="helpId" placeholder="Last vaccination" [(ngModel)]="selectedChild.lastVacc">
+                                    <small id="helpId" class="form-text text-muted">Help text</small>
+                                  </div>
+                                  <div class="form-group">
+                                        <label for=""></label>
+                                        <input type="text"
+                                          class="form-control" name="" id="" aria-describedby="helpId" placeholder="Allergies" [(ngModel)]="selectedChild.allergies">
+                                        <small id="helpId" class="form-text text-muted">Help text</small>
+                                      </div>
+                           
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                      <button type="button" class="btn btn-warning" (click)="updateChild(selectedChild)">Update</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+      
+      <!-- Modal INSERT-->
+      <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Add Worker</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="container">
+                <form #workerForm="ngForm" (submit)="submit(workerForm.value)">
+                    <div class="row">
+              <div class="col-md-12 form-group">
+                <label for=""></label>
+                <input type="text"
+                  class="form-control" name="name" placeholder="Full Name" ngModel>
+              </div>
+              <div class="col-md-6 form-group">
+                <label for=""></label>
+                <input type="tel"
+                  class="form-control" name="phone"  aria-describedby="helpId" placeholder="Phone Number" ngModel>
+              </div>
+              <div class="col-md-6 form-group">
+                  <label for=""></label>
+                  <input type="email"
+                    class="form-control" name="email" aria-describedby="helpId" placeholder="Email" ngModel>
+                </div>
+                <div class="col-md-12 form-group">
+                    <label for=""></label>
+                    <input type="password"
+                      class="form-control" name="password" aria-describedby="helpId" placeholder="Password" ngModel minlength="5">
+                  </div>
+              <div class="col-md-6 form-group">
+                  <label for=""></label>
+                  <input type="number"
+                    class="form-control" name="cnic" aria-describedby="helpId" placeholder="CNIC Number" ngModel>
+                </div>
+              <div class="col-md-12 form-group" *ngIf="workers">
+                <label for="">Assigned Worker</label>
+                <select class="form-control" (change)="onChange($event.target.value)">
+                    <option value=""> </option>
+                  <option *ngFor="let doc of workers" value='{ "id":"{{doc.id}}", "name":"{{doc.name}}" }' >{{doc.name}}</option>
+                </select>
+                </div>
+                <div class="col-md-4 form-group">
+                    <label for="">Tehseel</label>
+                    <input type="text"
+                      class="form-control" name="tehseel" aria-describedby="helpId" ngModel>
+                  </div>
+                  <div class="col-md-4 form-group">
+                      <label for="">City</label>
+                      <input type="text"
+                        class="form-control" name="city"  aria-describedby="helpId" ngModel>
+                    </div>
+                    <div class="col-md-4 form-group">
+                        <label for="">Country</label>
+                        <input type="text"
+                          class="form-control" name="country" aria-describedby="helpId" ngModel>
+                      </div>
+                      <div class="col-md-6 form-group">
+                        <div class="form-check">
+                            <label class="form-check-label">
+                                    Approvde account!
+                                <input class="form-check-input" type="checkbox" value="" name="approved" ngModel>
+                                <span class="form-check-sign">
+                                    <span class="check"></span>
+                                </span>
+                            </label>
+                        </div>
+                      </div>
+                      <div class="col-md-6 form-group">
+                              <label for="">Status</label>
+                              <select class="form-control" name="status" ngModel>
+                                <option value="active">Active</option>
+                                <option value="dismiss">Dismiss</option>
+                                <option value="away">Away</option>
+                              </select>
+                          </div>
+                      <div class="col-md-12 form-group">
+                          <label for="">Note</label>
+                          <textarea class="form-control" name="note"  rows="3" placeholder="Prescription Note.." ngModel></textarea>
+                        </div>
+              
+            
+                    </div>
+            </form>
+            
+            </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary" (click)="submit(workerForm.value)" >Save changes</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+    
+    
+    
+      <!-- MODAL EDIT -->
+        <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModal" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Update Worker</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <div class="container" *ngIf="selectedGuardian">
+                    <form #workerUpdateForm="ngForm" (submit)="submit(workerUpdateForm.value)">
+                        <div class="row">
+                  <div class="col-md-12 form-group">
+                    <label for=""></label>
+                    <input type="text"
+                      class="form-control" name="name" placeholder="Full Name" [(ngModel)]="selectedGuardian.name">
+                  </div>
+                  <div class="col-md-6 form-group">
+                    <label for=""></label>
+                    <input type="number"
+                      class="form-control" name="phone"  aria-describedby="helpId" placeholder="Phone Number" [(ngModel)]="selectedGuardian.phone">
+                  </div>
+                  <div class="col-md-6 form-group">
+                      <label for=""></label>
+                      <input type="email"
+                        class="form-control" name="email" aria-describedby="helpId" placeholder="Email" [(ngModel)]="selectedGuardian.email">
+                    </div>
+                    <div class="col-md-12 form-group">
+                        <label for=""></label>
+                        <input type="password"
+                          class="form-control" name="password" aria-describedby="helpId" placeholder="Password" [(ngModel)]="selectedGuardian.password">
+                      </div>
+                  <div class="col-md-6 form-group">
+                      <label for=""></label>
+                      <input type="text"
+                        class="form-control" name="cnic" aria-describedby="helpId" placeholder="CNIC" [(ngModel)]="selectedGuardian.cnic">
+                    </div>
+                  <div class="col-md-12 form-group">
+                      
+                      <label for=""></label>
+                      <input type="text"
+                        class="form-control" name="workerName" aria-describedby="helpId" placeholder="Assigned Worker" [(ngModel)]="selectedGuardian.workerName" disabled>
+                    </div>
+                    <div class="col-md-4 form-group">
+                        <label for="">Tehseel</label>
+                        <input type="text"
+                          class="form-control" name="tehseel" aria-describedby="helpId" [(ngModel)]="selectedGuardian.tehseel">
+                      </div>
+                      <div class="col-md-4 form-group">
+                          <label for="">City</label>
+                          <input type="text"
+                            class="form-control" name="city"  aria-describedby="helpId" [(ngModel)]="selectedGuardian.city">
+                        </div>
+                        <div class="col-md-4 form-group">
+                            <label for="">Country</label>
+                            <input type="text"
+                              class="form-control" name="country" aria-describedby="helpId" [(ngModel)]="selectedGuardian.country">
+                          </div>
+                          <div class="col-md-6 form-group">
+                            <div class="form-check">
+                                <label class="form-check-label">
+                                        Approvde account!
+                                    <input class="form-check-input" type="checkbox" name="approved" [(ngModel)]="selectedGuardian.approved">
+                                    <span class="form-check-sign">
+                                        <span class="check"></span>
+                                    </span>
+                                </label>
+                            </div>
+                          </div>
+                          <div class="col-md-6 form-group">
+                                  <label for="">Status</label>
+                                  <select class="form-control" name="status" [(ngModel)]="selectedGuardian.status">
+                                    <option value="active">Active</option>
+                                    <option value="dismiss">Dismiss</option>
+                                    <option value="away">Away</option>
+                                  </select>
+                              </div>
+                          <div class="col-md-12 form-group">
+                              <label for="">Note</label>
+                              <textarea class="form-control" name="note"  rows="3" placeholder="Prescription Note.." [(ngModel)]="selectedGuardian.note"></textarea>
+                            </div>
+                  
+                
+                        </div>
+                </form>
+                
+                </div>
+                </div>
+                <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" (click)="update(selectedGuardian)" >Save changes</button>
+                      </div>
+              </div>
+            </div>

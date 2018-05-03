@@ -1,0 +1,29 @@
+<div class="sidebar" data-color="purple" data-background-color="white" data-image="../assets/img/sidebar-1.jpg">
+  <div class="logo">
+      <a href="http://www.creative-tim.com" class="simple-text logo-normal">
+          Doctor Panel
+      </a>
+  </div>
+  <div class="sidebar-wrapper">
+      <ul class="nav">
+          <li class="nav-item"   *ngFor="let x of sidebar" routerLink="{{x.url}}" routerLinkActive="active">
+              <a class="nav-link">
+                  <i class="material-icons">{{x.icon}}</i>
+                  <p>{{x.text}}</p>
+              </a>
+          </li>
+          <li class="nav-item"  (click)="logOut()" >
+            <a class="nav-link">
+                <i class="material-icons">exit_to_app</i>
+                <p>Logout</p>
+            </a>
+        </li>
+          <li class="nav-item active-pro">
+              <a class="nav-link" href="../examples/upgrade.html">
+                  <i class="material-icons">unarchive</i>
+                  <p>Support</p>
+              </a>
+          </li>
+      </ul>
+  </div>
+</div>
