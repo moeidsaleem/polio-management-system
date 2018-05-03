@@ -29,6 +29,8 @@ import { ApiService } from './api.service';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import { OrderModule } from 'ngx-order-pipe';
 import { NotificationsComponent } from './notifications/notifications.component';
+import { MessagesComponent } from './messages/messages.component';
+import { ConversationsComponent } from './conversations/conversations.component';
 
 
 
@@ -47,6 +49,9 @@ let ROUTES =[
     {path:'guardians', component:GuardiansComponent},
     {path:'guardians/:id', component:GuardiansComponent},
     {path:'workers', component:WorkersComponent},
+    {path:'notifications', component:NotificationsComponent},
+    {path:'messages/:id', component:MessagesComponent},
+    {path:'conversations', component:ConversationsComponent},
 
   ]},
   
@@ -79,7 +84,9 @@ let firebaseConfig= {
     FooterComponent,
     ProfileComponent,
     WorkersComponent,
-    NotificationsComponent
+    NotificationsComponent,
+    MessagesComponent,
+    ConversationsComponent
   ],
   imports: [
     BrowserModule,

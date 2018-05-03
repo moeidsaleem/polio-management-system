@@ -128,6 +128,12 @@ addWorker(data){
   return this.afs.collection('workers').add(data)
 
 }
+//~ GET A WORKER 
+getWorker(workerId){
+  return this.afs.doc('workers/'+workerId).snapshotChanges();
+}
+
+
 //~ READ 
 getWorkers(){
   return this.afs.collection('workers', ref=> ref.where('doctorId','==',this.adminId)).snapshotChanges();
@@ -164,6 +170,77 @@ deleteChildren(id){
   return this.afs.doc('children/'+id).delete();
 }
 
+
+
+/* ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: NOTFICATIONS  ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: */
+
+
+// ~ CREATE
+generateNotification(not){ /* type,message,date, priority(low,medium, high),  */
+  return this.afs.collection('notifications').add(not);
+}
+
+// ~ READ
+getAllNotifications(){
+  return this.afs.collection('notifications').snapshotChanges();
+}
+getNotificationsById(id){
+  return this.afs.collection('notifications', ref=>ref.where('userId','==',id)).snapshotChanges();
+}
+getNotificationsByType(type){  /* type==> | 'specific' | 'global' | */
+  return this.afs.collection('notifications', ref=>ref.where('type','==',type)).snapshotChanges();
+}
+
+// ~ DELETE
+deleteNotification(notificationId){
+  return this.afs.doc('notifications/'+notificationId).delete();
+}
+
+
+
+
+      /* ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: CHAT  ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: */
+
+      //chat with your doctor 
+   getMessages(){
+     return this.afs.collection('messages/', ref=> ref.where('doctorId','==',this.adminId)).snapshotChanges();
+   }
+
+   sendMessage(conversation){ 
+     console.log(conversation);
+     if(conversation.started == false){
+       conversation.started = true;
+      return this.afs.doc('messages/'+conversation.userId+'-'+conversation.doctorId).set(conversation).then(()=> console.log(`convo created! message sent`))
+     }else {
+      return this.afs.doc('messages/'+conversation.userId+'-'+conversation.doctorId).update({
+        messages: conversation.messages
+      }).then(r=>{ console.log('message sent!')})
+     }
+
+   }
+
+   getChat(chatId){
+     return this.afs.doc('messages/'+chatId).valueChanges();
+   }
+
+   /* 
+   CHAT: 
+        Chats: 
+          -- 23aksd23asmsd23maasa2
+              -- doctorId      
+              -- userType   ( | worker | doctor |)   
+              -- userId      
+              -- messages:[{
+                senderName:
+                senderId:
+                senderPhoto:
+                message:
+              }];
+              
+   
+   chat.where('userType','==','worker').where('userId','==','')
+   
+   */
 
 
 }

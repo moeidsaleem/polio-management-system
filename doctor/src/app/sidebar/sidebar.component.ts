@@ -24,9 +24,11 @@ logOut(){
     {icon:'dashboard', url:'/dashboard/home', text:'Dashboard'},
     {icon:'person', url:'/dashboard/profile', text:'Profile'},
     // {icon:'local_pharmacy', url:'/dashboard/vaccines', text:'Vaccines'},
-    // {icon:'local_hospital', url:'/dashboard/doctors', text:'Doctors'},
     // {icon:'wc', url:'/dashboard/guardians', text:'Guardians'},
     {icon:'nature_people', url:'/dashboard/workers', text:'Workers'},
+    {icon:'local_hospital', url:'/dashboard/conversations', text:'Conversations'},
+    {icon:'wc', url:'/dashboard/notifications', text:'Notifications'},
+
     // {icon:'exit_to_app', url:'/dashboard/logout', text:'Logout'},
   ]
 }
